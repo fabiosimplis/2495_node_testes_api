@@ -41,12 +41,27 @@ describe('POST em /editoras', () => {
       .expect(201);
     idResposta = resposta.body.content.id;
   });
+  it('Deve não adicionar nada ao passar body vazio', async () => {
+    await request(app)
+      .post('/editoras')
+      .send({})
+      .expect(400);
+  });
 });
 
 describe('GET /editores by id', () => {
-  it('Get o recurso adicionado', async () => {
+  it('Deve o recurso adicionado', async () => {
     await request(app)
       .get(`/editoras/${idResposta}`);
+  });
+});
+
+describe('PUT em /editoras', () => {
+  it('Deve alterar o campo nome', async () => {
+    await request(app)
+      .put(`/editoras/${idResposta}`)
+      .send({ nome: 'Casado do Código' })
+      .expect(204);
   });
 });
 
