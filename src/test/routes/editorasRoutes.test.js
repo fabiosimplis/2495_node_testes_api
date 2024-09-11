@@ -1,6 +1,8 @@
 import request from 'supertest';
 // import wtfnode from 'wtfnode'; // pega o dump das requisições
-import { describe } from '@jest/globals';
+import {
+  describe, expect, it, jest,
+} from '@jest/globals';
 import app from '../../app.js';
 
 // iniciando o servidor
@@ -62,10 +64,15 @@ describe('PUT em /editoras', () => {
     ['cidade', { cidade: 'Recife' }], // Segundo
     ['email', { email: 'cdc@cdc.com' }], // Terceiro
   ])('Deve alterar o campo %s', async (chave, param) => { // %s faz com que o nome dos testes mude
-    await request(app)
+    // criando um espião
+    const requisicao = { request };
+    const spy = jest.spyOn(requisicao, 'request'); // passamos o objeto que vamos acompanhar e o método dentro do Objeto
+    await requisicao.request(app)
       .put(`/editoras/${idResposta}`)
       .send(param)
       .expect(204);
+
+    expect(spy).toHaveBeenCalled();
   });
 });
 
